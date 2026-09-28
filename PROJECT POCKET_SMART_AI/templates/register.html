@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketSmart AI - Create Your Account</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <span>PocketSmart</span>
+      <span class="brand-badge">AI</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/login" class="btn btn-nav-ghost">Sign In</a></li>
+    </ul>
+  </nav>
+
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-brand-logo">PocketSmart</div>
+      <div class="auth-brand-sub">AI-Powered Budget Planning</div>
+      <h2 class="auth-card-title">Create Your Account</h2>
+
+      <div id="error-alert" style="display: none; background: #fee2e2; color: #b91c1c; padding: 0.75rem; border-radius: 6px; font-size: 0.85rem; margin-bottom: 1.25rem;"></div>
+
+      <form id="register-form">
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <div class="input-with-icon">
+            <span class="input-icon">👤</span>
+            <input type="text" id="username" name="username" class="form-input" placeholder="Choose a username" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <div class="input-with-icon">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-with-icon">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="password" name="password" class="form-input" placeholder="Create a strong password" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirm_password">Confirm Password</label>
+          <div class="input-with-icon">
+            <span class="input-icon">🛡️</span>
+            <input type="password" id="confirm_password" name="confirm_password" class="form-input" placeholder="Confirm your password" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" style="padding: 0.75rem; margin-top: 1rem; font-size: 1rem;">
+          Create Account 👤+
+        </button>
+      </form>
+
+      <div class="auth-card-footer">
+        Already have an account? <a href="/login">Sign In</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("register-form").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const errBox = document.getElementById("error-alert");
+      errBox.style.display = "none";
+
+      const username = document.getElementById("username").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirm_password").value;
+
+      if (password !== confirmPassword) {
+        errBox.textContent = "Passwords do not match.";
+        errBox.style.display = "block";
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("confirm_password", confirmPassword);
+
+      try {
+        const response = await fetch("/register", {
+          method: "POST",
+          body: formData
+        });
+        const data = await response.json();
+        if (response.ok) {
+          window.location.href = "/dashboard";
+        } else {
+          errBox.textContent = data.detail || "Registration failed. Please try again.";
+          errBox.style.display = "block";
+        }
+      } catch (err) {
+        errBox.textContent = "Network error. Please try again.";
+        errBox.style.display = "block";
+      }
+    });
+  </script>
+
+</body>
+</html>

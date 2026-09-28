@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketSmart AI - User Dashboard</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+  <!-- Top Navbar (Matching Page 31) -->
+  <nav class="navbar">
+    <a href="/dashboard" class="nav-brand">
+      <span>PocketSmart</span>
+      <span class="brand-badge">AI</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/dashboard" class="active">🏠 Dashboard</a></li>
+      <li><a href="/home-planner">🛋️ Home Planner</a></li>
+      <li><a href="/party-planner">🎉 Party Planner</a></li>
+      <li><a href="/jewelry-planner">💎 Jewelry Planner</a></li>
+      <li><a href="/history">🕒 History</a></li>
+      <li><a href="/logout" class="btn btn-nav-ghost">🚪 Logout</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <!-- Welcome Header -->
+    <div class="dashboard-welcome">
+      <h1>Welcome, {{ user.full_name or user.username }}!</h1>
+      <p>Choose a budget planner to get started with your personalized financial planning experience</p>
+    </div>
+
+    <!-- 3 Planners Grid (Page 31) -->
+    <div class="planners-grid">
+      <!-- Home Planner -->
+      <div class="planner-card">
+        <div class="planner-card-header home-header">
+          <div class="planner-card-icon">🏠</div>
+        </div>
+        <div class="planner-card-body">
+          <h3 class="planner-card-title">Home Budget Planner</h3>
+          <p class="planner-card-desc">
+            Plan your interior design budget efficiently with AI-powered recommendations for furniture, lighting, and more.
+          </p>
+          <a href="/home-planner" class="btn btn-primary btn-block">Get Started</a>
+        </div>
+      </div>
+
+      <!-- Party Planner -->
+      <div class="planner-card">
+        <div class="planner-card-header party-header">
+          <div class="planner-card-icon">🎉</div>
+        </div>
+        <div class="planner-card-body">
+          <h3 class="planner-card-title">Party Budget Planner</h3>
+          <p class="planner-card-desc">
+            Plan your perfect event with budget allocations for venue, catering, decorations, and entertainment.
+          </p>
+          <a href="/party-planner" class="btn btn-primary btn-block">Get Started</a>
+        </div>
+      </div>
+
+      <!-- Jewelry Planner -->
+      <div class="planner-card">
+        <div class="planner-card-header jewelry-header">
+          <div class="planner-card-icon">💎</div>
+        </div>
+        <div class="planner-card-body">
+          <h3 class="planner-card-title">Jewelry Budget Planner</h3>
+          <p class="planner-card-desc">
+            Find the ideal jewelry pieces for any occasion that match your outfit and stay within your budget.
+          </p>
+          <a href="/jewelry-planner" class="btn btn-primary btn-block">Get Started</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- View All Recommendation History Button -->
+    <div class="dashboard-actions">
+      <a href="/history" class="btn btn-secondary" style="border: 1px solid #f59e0b; color: #b45309; background: #fffbeb; font-weight: 700; padding: 0.75rem 2rem;">
+        📂 View All Recommendation History
+      </a>
+    </div>
+
+    <!-- Recent Activity Card (Page 31) -->
+    <div class="recent-activity-card">
+      <h3>🕒 Recent Activity</h3>
+      <div class="activity-list">
+        {% if recent_recommendations %}
+          {% for item in recent_recommendations %}
+            <a href="/history" class="activity-item">
+              <div class="activity-info">
+                <div class="activity-icon">
+                  {% if item.recommendation_type == 'home' %}🏠
+                  {% elif item.recommendation_type == 'party' %}🎉
+                  {% else %}💎{% endif %}
+                </div>
+                <div>
+                  <div class="activity-title">{{ item.result_summary }}</div>
+                  <div class="activity-meta">Created on {{ item.timestamp }}</div>
+                </div>
+              </div>
+              <div style="font-weight: 700; color: #1e3a8a;">
+                ₹{{ "{:,.2f}".format(item.full_result.total_budget if item.full_result and item.full_result.total_budget else 5000) }}
+              </div>
+            </a>
+          {% endfor %}
+        {% else %}
+          <p style="color: var(--text-muted); font-size: 0.95rem; text-align: center; padding: 1.5rem;">
+            No past activity recorded yet. Start by generating recommendations in one of the planners above!
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer" style="margin-top: 4rem; padding: 2rem 1rem 1rem;">
+    <div class="footer-bottom" style="margin-top: 0; border-top: none;">
+      &copy; 2025-2026 PocketSmart. All rights reserved.
+    </div>
+  </footer>
+
+</body>
+</html>
